@@ -9,7 +9,7 @@ class AddressSource():
     """
     superclass for a address data source
     """
-    def get_addresses_results(self, query):
+    async def get_addresses_results(self, query):
         """
         must return an array of InlineQueryResultVenu
         """
@@ -33,10 +33,10 @@ class SQLiteDatasource(AddressSource):
         INSERT INTO addresses_index SELECT * FROM addresses;
     """
 
-    def __init__(self, db_source = "databases/maalemap.db"):
+    def __init__(self, db_source):
         self.__dbconn = sqlite3.connect(db_source)
 
-    def get_addresses_results(self, query):
+    async def get_addresses_results(self, query):
         items = []
         
         if query:
@@ -64,7 +64,7 @@ class PandasDatasource(AddressSource):
     Experimental. Warning: Might be CPU/Memory heavy
     """
 
-    def __init__(self, csv_source = "databases/male-map.csv"):
+    def __init__(self, csv_source):
         self.__df =  pd.read_csv(csv_source)
         self.__names = self.__df['NAME'].unique()
 
@@ -81,7 +81,7 @@ class PandasDatasource(AddressSource):
     def __query(self,q):
         return self.__df[self.__df.apply(self.__get_filter(q), axis=1) > 70]
 
-    def get_addresses_results(self, query):
+    async def get_addresses_results(self, query):
         items = []
         if query:
             res = self.__query(query)
