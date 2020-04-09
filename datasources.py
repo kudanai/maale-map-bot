@@ -45,7 +45,7 @@ class SQLiteDatasource(AddressSource):
         self.__df =  pd.read_sql_query("SELECT name from addresses", self.__dbconn)
 
 
-    def __query_df(self,q):
+    async def __query_df(self,q):
         return (self.__df[self.__df.apply(lambda row: fuzz.WRatio(row['name'],q), axis=1) > 70]['name']).tolist()
 
 
@@ -60,7 +60,7 @@ class SQLiteDatasource(AddressSource):
 
 
     async def get_suggestions(self, query):
-        return self.__query_df(query)[:5]
+        return (await self.__query_df(query))[:5]
 
 
     async def get_addresses_results(self, query):
