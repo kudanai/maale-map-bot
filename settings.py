@@ -12,9 +12,12 @@ SQLITE_SOURCE=os.getenv("SQLITE_SOURCE", os.path.join("databases", "maalemap.db"
 
 # webhook config
 WEBHOOK=os.getenv('WEBHOOK', "false") == "true"
-WEBHOOK_PORT=int(os.getenv('WEBHOOK_PORT', os.getenv("PORT", "8443")))
-WEBHOOK_URL=os.getenv('WEBHOOK_URL', f"https://{os.environ.get('HEROKU_APP_NAME', None)}.herokuapp.com")  # defaults to heroku setup
+WEBHOOK_URL=os.getenv('WEBHOOK_URL', None)
 WEBHOOK_PATH=os.getenv('WEBHOOK_PATH', "/maalemaps/bot")
+
+# webapp config
+WEBAPP_HOST=os.getenv('WEBAPP_HOST','0.0.0.0')
+WEBAPP_PORT=int(os.getenv('WEBAPP_PORT', os.getenv("PORT", "8443")))
 
 if DEBUG:
     import logging

@@ -66,7 +66,7 @@ if __name__ == '__main__':
             WEBHOOK_PATH, 
             on_startup=on_startup, 
             on_shutdown=on_shutdown, 
-            host='0.0.0.0',
-            port=WEBHOOK_PORT)
+            host=WEBAPP_HOST,
+            port=WEBAPP_PORT)
     else: 
         executor.start_polling(dp, skip_updates=True)
