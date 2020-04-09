@@ -1,18 +1,26 @@
 from aiogram import Bot, Dispatcher, executor
 from aiogram.types import InlineQuery, InlineQueryResultVenue, Message
-from datasources import AddressSource, SQLiteDatasource, PandasDatasource
-from settings import MAPBOT_API_TOKEN, USE_CSV, DEBUG, SQLITE_SOURCE, CSV_SOURCE, WEBHOOK, WEBHOOK_PORT, WEBHOOK_URL, WEBHOOK_PATH
+from datasources import AddressSource, SQLiteDatasource
+from settings import *
 
 
 # initialize the bot
 bot = Bot(token=MAPBOT_API_TOKEN)
 dp = Dispatcher(bot)
-data_source:AddressSource = PandasDatasource(CSV_SOURCE) if USE_CSV else SQLiteDatasource(SQLITE_SOURCE)
+data_source:AddressSource = SQLiteDatasource(SQLITE_SOURCE)
 
 @dp.inline_handler()
 async def inline_query_handler(inline_query: InlineQuery):
     q = inline_query.query
-    results = await data_source.get_addresses_results(q)
+    results = [
+                InlineQueryResultVenue(
+                    id = x['id'],
+                    latitude= x['latitude'],
+                    longitude= x['longitude'],
+                    title=x['title'],
+                    address=x['address']
+                ) for x in await data_source.get_addresses_results(q)
+            ]
     await bot.answer_inline_query(inline_query.id, results=results, cache_time=1)
 
 
@@ -25,22 +33,21 @@ async def start_handler(message: Message):
 
 @dp.message_handler()
 async def message_handler(message: Message):
-    address = await data_source.get_address(message.text)
-    if isinstance(address,dict):
+    addresses = await data_source.get_addresses_results(message.text)
+    address = addresses[0] if addresses else None   # pick one
+    if address:
         await message.answer_venue(
             address["latitude"],
             address["longitude"],
             address["title"],
             address["address"]
         )
-    elif isinstance(address,list):
-        await message.answer(
-            "Sorry! Could not find the address.\nDid you mean: \n\n" +
-            "\n".join([f"  * {x['title']}" for x in address])
-        )
     else:
+        suggestions = await data_source.get_suggestions(message.text)
+        suggestions_flat = "\n".join([f"* {x}" for x in suggestions])
         await message.answer(
-            "Sorry! Could not find the address"
+            "Sorry! Could not find the address\n" + 
+            ("Did you mean:\n\n" + f"{suggestions_flat}" if suggestions else "")
         )
 
 

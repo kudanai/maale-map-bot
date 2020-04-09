@@ -3,12 +3,14 @@ import os
 
 load_dotenv()
 
-MAPBOT_API_TOKEN=os.getenv("MAPBOT_API_TOKEN")
-USE_CSV=os.getenv('USE_CSV', "false") == "true"
+# bot config
+MAPBOT_API_TOKEN=os.getenv("MAPBOT_API_TOKEN", None)
 DEBUG=os.getenv('DEBUG', "false") == "true"
-CSV_SOURCE=os.getenv('CSV_SOURCE', os.path.join("databases", "male-map.csv"))
+
+# data sources
 SQLITE_SOURCE=os.getenv("SQLITE_SOURCE", os.path.join("databases", "maalemap.db"))
 
+# webhook config
 WEBHOOK=os.getenv('WEBHOOK', "false") == "true"
 WEBHOOK_PORT=int(os.getenv('WEBHOOK_PORT', "8001"))
 WEBHOOK_URL=os.getenv('WEBHOOK_URL', "http://kudanai.xyz")
