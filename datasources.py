@@ -17,7 +17,7 @@ class AddressSource():
 
     async def get_address(self, query):
         """
-        must return an address dict
+        must return an address dict, suggestions list
         """
         pass
 
@@ -59,7 +59,25 @@ class SQLiteDatasource(AddressSource):
                     "address": f"{row[4]}, {row[5]}".title()
                 }
 
+            # if single reply was not found, load up some suggestions
+            if not reply:
+                suggestions = []
+                query = str(query[0:int(len(query)/1.5)]).strip() + "*"
+                res = c.execute("SELECT * FROM addresses_index WHERE addresses_index MATCH ? ORDER BY rank LIMIT 5;", (f"name:{query}",))
+                for row in res:
+                    suggestions.append({
+                            "id": self._get_address_hash(row[0]),
+                            "latitude": row[2],
+                            "longitude": row[3],
+                            "title": str(row[0]).title(),
+                            "address": f"{row[4]}, {row[5]}".title()
+                        })
+
+                if len(suggestions)>0:
+                    reply = suggestions        
+
             c.close()
+
 
         return reply
 
