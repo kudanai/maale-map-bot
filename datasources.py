@@ -68,9 +68,12 @@ class SQLiteDatasource(AddressSource):
         
         if query:
             c = self.__dbconn.cursor()
-            res = c.execute("SELECT * FROM addresses_index WHERE addresses_index MATCH ? ORDER BY rank LIMIT 10;", (f"name:{query}*",))
-            for row in res:
-                items.append(self.__row_to_dict(row))
+            try:
+                res = c.execute("SELECT * FROM addresses_index WHERE addresses_index MATCH ? ORDER BY rank LIMIT 10;", (f"name:{query}*",))
+                for row in res:
+                    items.append(self.__row_to_dict(row))
+            except Exception as e:
+                pass
 
             c.close()
         return items

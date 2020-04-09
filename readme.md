@@ -15,6 +15,7 @@ WEBHOOK_URL=https://yourwebhook.com
 WEBHOOK_PATH=/bot
 
 # local service for aiohttp listener
+# comment out WEBAPP_PORT to use the PORT env var if using heroku
 WEBAPP_HOST=0.0.0.0
 WEBAPP_PORT=8443
 ```
