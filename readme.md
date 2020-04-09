@@ -13,8 +13,7 @@ MAPBOT_API_TOKEN=YOURBOTTOKEN
 WEBHOOK=false
 
 # these are for webhook config
-# leave WEBHOOK_URL out for autoconfig on heroku
 WEBHOOK_PORT=80
-WEBHOOK_URL=https://yourwebhookurl.com
+WEBHOOK_URL=https://yourwebhookurl.herokuapp.com
 WEBHOOK_PATH=/maalemaps/bot
 ```
