@@ -11,17 +11,20 @@ data_source:AddressSource = SQLiteDatasource(SQLITE_SOURCE)
 
 @dp.inline_handler()
 async def inline_query_handler(inline_query: InlineQuery):
-    q = inline_query.query
-    results = [
-                InlineQueryResultVenue(
-                    id = x['id'],
-                    latitude= x['latitude'],
-                    longitude= x['longitude'],
-                    title=x['title'],
-                    address=x['address']
-                ) for x in await data_source.get_addresses_results(q)
-            ]
-    await bot.answer_inline_query(inline_query.id, results=results, cache_time=1)
+    try:
+        q = inline_query.query
+        results = [
+                    InlineQueryResultVenue(
+                        id = x['id'],
+                        latitude= x['latitude'],
+                        longitude= x['longitude'],
+                        title=x['title'],
+                        address=x['address']
+                    ) for x in await data_source.get_addresses_results(q)
+                ]
+        await bot.answer_inline_query(inline_query.id, results=results, cache_time=1)
+    except Exception as e:
+        pass
 
 
 @dp.message_handler(commands=["start", "help"])
