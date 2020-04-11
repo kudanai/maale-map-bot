@@ -40,8 +40,11 @@ async def start_handler(message: Message):
 @dp.message_handler()
 async def message_handler(message: Message):
     try:
+
+        address = None
         addresses = await data_source.get_addresses_results(message.text)
-        address = addresses[0] if addresses else None   # pick one
+        address = next((x for x in addresses if x['title'].lower() == message.text.lower()), None)
+
         if address:
             await message.answer_venue(
                 address["latitude"],
