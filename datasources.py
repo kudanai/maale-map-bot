@@ -1,8 +1,7 @@
 import pandas as pd
-from fuzzywuzzy import fuzz
+from fuzzywuzzy import fuzz, process
 import hashlib
 import sqlite3
-from aiogram.types import InlineQuery, InlineQueryResultVenue, Venue
 
 
 class AddressSource():
@@ -11,7 +10,7 @@ class AddressSource():
     """
     async def get_addresses_results(self, query)-> list:
         """
-        must return an array of InlineQueryResultVenu
+        must return an array of dicts
         """
         pass
 
@@ -46,7 +45,8 @@ class SQLiteDatasource(AddressSource):
 
 
     async def __query_df(self,q):
-        return (self.__df[self.__df.apply(lambda row: fuzz.WRatio(row['name'],q), axis=1) > 70]['name']).tolist()
+        return [x[0] for x in process.extractBests(q, self.__df['name'], scorer=fuzz.WRatio, score_cutoff=70, limit=5)]
+        # return (self.__df[self.__df.apply(lambda row: fuzz.WRatio(row['name'],q), axis=1) > 70]['name']).tolist()
 
 
     def __row_to_dict(self, row):

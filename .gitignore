@@ -1,5 +1,6 @@
 # project configs
 .vscode/
+.idea/
 
 # OSX Artifacts
 .DS_Store
@@ -57,6 +58,7 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 cover/
+*-tests.py
 
 # Translations
 *.mo
