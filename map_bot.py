@@ -10,9 +10,6 @@ ds = SQLiteDatasource(SQLITE_SOURCE)
 
 
 async def init():
-    if DEBUG:
-        import logging
-        logging.basicConfig(level=logging.DEBUG)
 
     # for debugging, using an NGROK process to localhost
     # from pyngrok import ngrok
