@@ -5,17 +5,25 @@ A simple TelegramBot to fetch residential addresses in Male', Maldives. The bot 
 ### sample `.env` file
 
 ```bash
-DEBUG=true
+DEBUG=false
 SQLITE_SOURCE=databases/maalemap.db
-MAPBOT_API_TOKEN=yourbotkeyfrombotfather
 
-# enable webhook support [full hook will be {WEBHOOK_URL}{WEBHOOK_PATH}]
-WEBHOOK=true
-WEBHOOK_URL=https://yourwebhook.com
-WEBHOOK_PATH=/bot
+MAPBOT_API_TOKEN=telegramtoken
+MAPBOT_API_TOKEN_VIBER=vibertoken
 
-# local service for aiohttp listener
-# comment out WEBAPP_PORT to use the PORT env var if using heroku
+# enable webhook support
+WEBHOOK_URL=https://google.com
+WEBHOOK_PATH=/maalemaps/bot
+
+# local service
 WEBAPP_HOST=0.0.0.0
-WEBAPP_PORT=8443
+#WEBAPP_PORT=8443
+```
+
+## Testing
+for testing webhooks, uncomment the following lines
+
+```python
+from pyngrok import ngrok
+WEBHOOK_URL = ngrok.connect(WEBAPP_PORT).replace("http", "https").rstrip("/")
 ```
