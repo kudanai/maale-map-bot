@@ -1,30 +1,8 @@
 import pandas as pd
 from fuzzywuzzy import fuzz, process
-import hashlib
 import sqlite3
 
-
-class AddressSource():
-    """
-    superclass for a address data source
-    """
-    async def get_addresses_results(self, query)-> list:
-        """
-        must return an array of dicts
-        """
-        pass
-
-    async def get_suggestions(self, query) -> list:
-        """
-        returns list of suggestions
-        """
-        pass
-
-    def _get_address_hash(self, address_title) -> str:
-        """
-        compute a unique reply hash
-        """
-        return hashlib.md5(address_title.encode()).hexdigest()
+from models.address_source import AddressSource
 
 
 class SQLiteDatasource(AddressSource):
@@ -41,16 +19,14 @@ class SQLiteDatasource(AddressSource):
 
     def __init__(self, db_source):
         self.__dbconn = sqlite3.connect(db_source)
-        self.__df =  pd.read_sql_query("SELECT name from addresses", self.__dbconn)
+        self.__df = pd.read_sql_query("SELECT name from addresses", self.__dbconn)
 
-
-    async def __query_df(self,q):
+    def __query_df(self, q):
         return [x[0] for x in process.extractBests(q, self.__df['name'], scorer=fuzz.WRatio, score_cutoff=70, limit=5)]
         # return (self.__df[self.__df.apply(lambda row: fuzz.WRatio(row['name'],q), axis=1) > 70]['name']).tolist()
 
-
     def __row_to_dict(self, row):
-        return { 
+        return {
             "id": self._get_address_hash(row[0]),
             "latitude": row[2],
             "longitude": row[3],
@@ -58,18 +34,17 @@ class SQLiteDatasource(AddressSource):
             "address": f"{row[4]}, {row[5]}".title()
         }
 
+    def get_suggestions(self, query):
+        return self.__query_df(query)
 
-    async def get_suggestions(self, query):
-        return (await self.__query_df(query))[:5]
-
-
-    async def get_addresses_results(self, query):
+    def get_addresses_results(self, query):
         items = []
-        
+
         if query:
             c = self.__dbconn.cursor()
             try:
-                res = c.execute("SELECT * FROM addresses_index WHERE addresses_index MATCH ? ORDER BY rank LIMIT 10;", (f"name:{query}*",))
+                res = c.execute("SELECT * FROM addresses_index WHERE addresses_index MATCH ? ORDER BY rank LIMIT 10;",
+                                (f"name:{query}*",))
                 for row in res:
                     items.append(self.__row_to_dict(row))
             except Exception as e:
