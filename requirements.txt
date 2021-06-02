@@ -42,7 +42,7 @@ six==1.14.0
 starlette==0.13.2
 tornado==6.0.4
 typed-ast==1.4.1
-urllib3==1.25.8
+urllib3==1.26.5
 uvicorn==0.11.7
 uvloop==0.14.0
 viberbot==1.0.11
