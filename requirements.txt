@@ -46,6 +46,6 @@ urllib3==1.25.8
 uvicorn==0.11.7
 uvloop==0.14.0
 viberbot==1.0.11
-websockets==8.1
+websockets==9.1
 wrapt==1.11.2
 yarl==1.4.2
