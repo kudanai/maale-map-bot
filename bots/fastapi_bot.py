@@ -18,7 +18,7 @@ class APIBot(MapBot):
         data_source = self.data_source
 
         @app.get("/")
-        async def handle_response(q:str = "test"):
+        async def handle_response(q: str = "test"):
             response = {
                 "matches": [],
                 "suggestions": []
@@ -31,5 +31,5 @@ class APIBot(MapBot):
 
             return JSONResponse(response)
 
-    async def setup_listener(self, app: FastAPI, host=None):
+    async def setup_listener(self, app: FastAPI, host=None, loop=None):
         app.mount("/api", self.app)

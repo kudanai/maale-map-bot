@@ -93,13 +93,12 @@ class ViberBot(MapBot):
         except Exception as e:
             print(e)
 
-    async def setup_listener(self, app: FastAPI, host=None):
+    async def setup_listener(self, app: FastAPI, host=None, loop=None):
         hook_path = f"{WEBHOOK_PATH}/viber/process/"
         app.mount(hook_path, self.app)
 
         hooker = f"{host}{hook_path}"
 
         # mother fucking viber. This is the sort of shit that makes people hate you
-        subprocess.Popen(["python", "-c", f"from bots import ViberBot;from time import sleep; sleep(10);ViberBot.set_hook_extern('{hooker}')"])
-
-
+        subprocess.Popen(["python", "-c",
+                          f"from bots import ViberBot;from time import sleep; sleep(10);ViberBot.set_hook_extern('{hooker}')"])

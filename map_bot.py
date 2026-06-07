@@ -28,6 +28,6 @@ async def init():
 
 if __name__ == "__main__":
     asyncio.run(init())
-    uvicorn.run(app, host=WEBAPP_HOST, port=WEBAPP_PORT )
+    uvicorn.run(app, host=WEBAPP_HOST, port=WEBAPP_PORT)
 
 
