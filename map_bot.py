@@ -19,7 +19,6 @@ async def init():
         TGBot(ds, MAPBOT_API_TOKEN),
         APIBot(ds, None),
         ViberBot(ds, MAPBOT_API_TOKEN_VIBER),
-        # DiscordBot(ds, DISCORD_TOKEN)
     ]
 
     for bot in bots:

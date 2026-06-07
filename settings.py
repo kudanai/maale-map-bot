@@ -8,7 +8,6 @@ DEBUG = os.getenv('DEBUG', "false") == "true"
 # bot config
 MAPBOT_API_TOKEN = os.getenv("MAPBOT_API_TOKEN", None)
 MAPBOT_API_TOKEN_VIBER = os.getenv("MAPBOT_API_TOKEN_VIBER", None)
-DISCORD_TOKEN = os.getenv("DISCORD_TOKEN", None)
 
 # data sources
 SQLITE_SOURCE = os.getenv("SQLITE_SOURCE", os.path.join("databases", "maalemap.db"))
